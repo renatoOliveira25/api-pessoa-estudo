@@ -1,0 +1,1 @@
+{"version":3,"file":"bancoDeDados.js","sourceRoot":"","sources":["../../src/controller/bancoDeDados.ts"],"names":[],"mappings":";;;AAEA,IAAI,gBAAgB,GAAa,EAAE,CAAC;AAEpC,SAAgB,SAAS,CAAC,MAAc;IACpC,sBAAsB;IAEtB,gBAAgB,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC;IAC9B,OAAO,gBAAgB,CAAC;AAE5B,CAAC;AAND,8BAMC"}
