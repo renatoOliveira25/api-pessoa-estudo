@@ -33,6 +33,11 @@ app.post('/user', (req, res) => {
     // retorna uma reposta ao front-end
     res.json({ mensagem: 'Dados recebidos com sucesso!' });
 });
+// Recupera todas as pessoas cadastradas
+app.get('/pessoas', (req, res) => {
+    const listaDePessoas = (0, bancoDeDados_1.listaPessoas)();
+    res.json(listaDePessoas);
+});
 // Executando o servidor
 app.listen(port, () => {
     console.log(`Servidor Express ouvindo na porta ${port}`);

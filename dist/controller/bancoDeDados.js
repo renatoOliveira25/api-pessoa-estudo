@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.persistir = void 0;
+exports.listaPessoas = exports.persistir = void 0;
 let bancoDadosPessoa = [];
 function persistir(pessoa) {
     //persistindo os dados
@@ -8,4 +8,8 @@ function persistir(pessoa) {
     return bancoDadosPessoa;
 }
 exports.persistir = persistir;
+function listaPessoas() {
+    return bancoDadosPessoa;
+}
+exports.listaPessoas = listaPessoas;
 //# sourceMappingURL=bancoDeDados.js.map

@@ -8,3 +8,7 @@ export function persistir(pessoa: Pessoa) {
     bancoDadosPessoa.push(pessoa);
     return bancoDadosPessoa;
 }
+
+export function listaPessoas() {
+    return bancoDadosPessoa;
+}
