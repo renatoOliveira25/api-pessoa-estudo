@@ -9,6 +9,8 @@ const app = express();
 // escutar as requisições
 const port: number = 3000;
 
+app.use(express.json());
+
 app.use(cors());
 
 // Rota principal do servidor
@@ -17,9 +19,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
+
+  console.log('Solicitação recebida:', req.body);
+
   const { nome, cpf, data_nascimento, telefone, endereco, altura, peso } = req.body;
 
-  const novaPessoa = new Pessoa(nome, cpf, data_nascimento, telefone, endereco, altura, peso);
+  const novaPessoa = new Pessoa(nome, cpf, new Date(data_nascimento), telefone, endereco, altura, peso);
 
   console.log(persistir(novaPessoa));
 
