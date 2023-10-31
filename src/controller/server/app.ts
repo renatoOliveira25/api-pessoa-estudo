@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { Pessoa } from '../../model/Pessoa';
-import { listaPessoas, persistir } from '../bancoDeDados';
-import { db } from '../db/db';
+import { apagarPessoa, atualizarPessoa, buscaPessoa, listarPessoas, persistirPessoa } from '../db/banco';
 
 // Criando um servidor com a API express
 const app = express();
@@ -16,19 +14,6 @@ app.use(express.json());
 // Configurando o servidor para usar o CORS
 app.use(cors());
 
-/**
- * Banco de dados
- */
-/* async function getUsers() {
-  try {
-    const result = await db.query('SELECT * FROM pessoas');
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.error('Erro ao consultar os usuários:', error);
-  }
-}
- */
 // Rota principal do servidor
 app.get('/', (req, res) => {
   res.send('Hello, World!');
@@ -37,23 +22,28 @@ app.get('/', (req, res) => {
 // Rota de cadastro de usuário
 app.post('/user', async (req, res) => {
 
-  try {
-    // recupera os dados recebidos na requisição
-    const { nome, cpf, data_nascimento, telefone, endereco, altura, peso } = req.body;
+  // recupera os dados recebidos na requisição
+  const { nome, cpf, data_nascimento, telefone, endereco, altura, peso } = req.body;
 
-    // instancia um novo objeto usando os dados da requisição
+  // instancia um novo objeto usando os dados da requisição
     //const novaPessoa = new Pessoa(nome, cpf, new Date(data_nascimento), telefone, endereco, altura, peso);
 
-    await db.none(`INSERT INTO pessoas 
-                  (nome, cpf, data_nascimento, telefone, endereco, altura, peso) 
-                  VALUES 
-                  ($1, $2, $3, $4, $5, $6, $7)`, [nome, cpf, data_nascimento, telefone, endereco, altura, peso]);
+  try {
+     
+    // Persistindo os dados no banco
+    await persistirPessoa(nome, cpf, data_nascimento, telefone, endereco, altura, peso);
 
+    // Reposta ao back-end caso a query tenha sido realizada com sucesso
     res.status(201).json({ mensagem: "Informações cadastradas com sucesso" });
 
   } catch (error) {
+
+    // Em caso de erro, é exibida a mensagem no console do back-end
     console.error('Erro ao cadastrar informações:', error);
+
+    // E restransmitida ao cliente
     res.status(500).json({ erro: 'Erro ao cadastrar informações' });
+
   }
 });
 
@@ -61,21 +51,78 @@ app.post('/user', async (req, res) => {
 app.get('/pessoas', async (req, res) => {
 
   try {
-    const result = await db.query('SELECT * FROM pessoas');
-    console.log(result);
+
+    // Recupera a lista de pessoas do banco de dados e armazena na variável result
+    const result = await listarPessoas();
+
+    //console.log(result);
+
+    // Retorna o resultado para o cliente
     res.json(result);
+
   } catch (error) {
+    // Em caso de erro, é exibido no console
     console.error('Erro na consulta ao banco de dados:', error);
+
+    // E retornado ao cliente
     res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
   }
+});
 
-  /* const listaDePessoas = getUsers().finally(() => {
-    // Encerre a conexão com o banco de dados após a consulta
-    pgp.end();
-  }); */
+// Recupera todas as pessoas cadastradas
+app.get('/pessoa/:nome', async (req, res) => {
 
-  // "banco de dados" local
-  //const listaDePessoas = listaPessoas();
+  const { nome } = req.params;
+
+  console.log(nome);
+
+  try {
+
+    // Recupera a lista de pessoas do banco de dados e armazena na variável result
+    const result = await buscaPessoa(nome);
+
+    console.log(result);
+
+    // Retorna o resultado para o cliente
+    res.json(result);
+
+  } catch (error) {
+    // Em caso de erro, é exibido no console
+    console.error('Erro na consulta ao banco de dados:', error);
+
+    // E retornado ao cliente
+    res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
+  }
+});
+
+app.put('/atualizar/:id', async (req, res) => {
+  console.log('Alterando os dados no servidor');
+
+  const requisicao = req.body;
+
+  console.log(requisicao.dadosPessoa.id);
+
+  try {
+    // Atualizando os dados no banco
+    /* await atualizarPessoa(
+        requisicao.dadosPessoa.id, 
+        requisicao.dadosPessoa.nome, 
+        requisicao.dadosPessoa.cpf, 
+        requisicao.dadosPessoa.data_nascimento, 
+        requisicao.dadosPessoa.telefone, 
+        requisicao.dadosPessoa.endereco, 
+        requisicao.dadosPessoa.altura, 
+        requisicao.dadosPessoa.peso); */
+
+    // Reposta ao back-end caso a query tenha sido realizada com sucesso
+    res.status(201).json({ mensagem: "Informações atualizadas com sucesso" });
+  } catch (error) {
+    // Em caso de erro, é exibida a mensagem no console do back-end
+    console.error('Erro ao alterar informações:', error);
+
+    // E restransmitida ao cliente
+    res.status(500).json({ erro: 'Erro ao alterar informações' });
+  }
 });
 
 app.delete('/delete/:id', async (req, res) => {
@@ -83,10 +130,12 @@ app.delete('/delete/:id', async (req, res) => {
     const id = req.params.id;
 
     console.log('Realizando a query de delete');
+    
     // Execute a operação de exclusão no banco de dados
-    await db.none('DELETE FROM pessoas WHERE id = $1', id);
+    await apagarPessoa(parseInt(id));
 
-    res.status(204).end(); // Resposta sem conteúdo
+    // Caso tenha dado certo, é retornado ao cliente
+    res.status(204).end();
   } catch (error) {
     console.error('Erro ao remover o cadastro:', error);
     res.status(500).json({ erro: 'Erro ao remover o cadastro' });
@@ -97,4 +146,3 @@ app.delete('/delete/:id', async (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor Express ouvindo na porta ${port}`);
 });
-
