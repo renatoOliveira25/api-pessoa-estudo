@@ -100,11 +100,9 @@ app.put('/atualizar/:id', async (req, res) => {
 
   const requisicao = req.body;
 
-  console.log(requisicao.dadosPessoa.id);
-
   try {
     // Atualizando os dados no banco
-    /* await atualizarPessoa(
+    await atualizarPessoa(
         requisicao.dadosPessoa.id, 
         requisicao.dadosPessoa.nome, 
         requisicao.dadosPessoa.cpf, 
@@ -112,7 +110,7 @@ app.put('/atualizar/:id', async (req, res) => {
         requisicao.dadosPessoa.telefone, 
         requisicao.dadosPessoa.endereco, 
         requisicao.dadosPessoa.altura, 
-        requisicao.dadosPessoa.peso); */
+        requisicao.dadosPessoa.peso);
 
     // Reposta ao back-end caso a query tenha sido realizada com sucesso
     res.status(201).json({ mensagem: "Informações atualizadas com sucesso" });
