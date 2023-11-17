@@ -109,13 +109,7 @@ export class Pessoa {
     }
 
     public mostraPessoa() {
-        console.log(`Nome: ${this.nome}
-        CPF: ${this.cpf}
-        Data de nascimento: ${this.data_nascimento.getUTCDate()}/${this.data_nascimento.getMonth()}/${this.data_nascimento.getFullYear()}
-        Telefone: ${this.telefone}
-        Endereço: ${this.endereco}
-        Altura: ${this.altura}
-        Peso: ${this.peso}`);
+        console.log(`Nome: ${this.nome}\nCPF: ${this.cpf}\nData de nascimento: ${this.data_nascimento.getUTCDate()}/${this.data_nascimento.getMonth()+1}/${this.data_nascimento.getFullYear()}\nTelefone: ${this.telefone}\nEndereço: ${this.endereco}\nAltura: ${this.altura}\nPeso: ${this.peso}`);
     }
 
     // implementar os métodos

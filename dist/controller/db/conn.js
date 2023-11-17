@@ -14,14 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseModel = void 0;
 const pg_1 = __importDefault(require("pg"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 class DatabaseModel {
     constructor() {
         this._config = {
-            user: "admin",
-            host: "localhost",
-            database: "pessoas",
-            password: "Adm1n@23",
-            port: parseInt(process.env.DB_PORT || '5432'),
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,
+            database: process.env.DB_NAME,
+            password: process.env.DB_PASSWORD,
+            port: process.env.DB_PORT,
             max: 10,
             idleTimeoutMillis: 10000
         };
