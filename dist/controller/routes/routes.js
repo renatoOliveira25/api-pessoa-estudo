@@ -12,44 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const banco_1 = require("../db/banco");
 const Pessoa_1 = require("../../model/Pessoa");
-// Criando um servidor com a API express
-const app = (0, express_1.default)();
-// Definindo a porta onde o servidor vai
-// escutar as requisições
-const port = 3000;
-// configurando o servidor para usar JSON
-app.use(express_1.default.json());
-// Configurando o servidor para usar o CORS
-app.use((0, cors_1.default)());
-// Rota principal do servidor
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
+const router = express_1.default.Router();
+exports.router = router;
+router.get('/', (req, res) => {
+    return res.json('Hello World');
 });
-// Rota de cadastro de usuário
-app.post('/user', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // recupera os dados recebidos na requisição
-    const { nome, cpf, data_nascimento, telefone, endereco, altura, peso } = req.body;
-    // instancia um novo objeto usando os dados da requisição
-    const novaPessoa = new Pessoa_1.Pessoa(nome, cpf, new Date(data_nascimento), telefone, endereco, altura, peso);
-    try {
-        // Persistindo os dados no banco
-        yield (0, banco_1.persistirPessoa)(novaPessoa);
-        // Reposta ao back-end caso a query tenha sido realizada com sucesso
-        res.status(201).json({ mensagem: "Informações cadastradas com sucesso" });
-    }
-    catch (error) {
-        // Em caso de erro, é exibida a mensagem no console do back-end
-        console.error('Erro ao cadastrar informações:', error);
-        // E restransmitida ao cliente
-        res.status(500).json({ erro: 'Erro ao cadastrar informações' });
-    }
-}));
-// Recupera todas as pessoas cadastradas
-app.get('/pessoas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/pessoas', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Recupera a lista de pessoas do banco de dados e armazena na variável result
         const result = yield (0, banco_1.listarPessoas)();
@@ -65,14 +37,29 @@ app.get('/pessoas', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
     }
 }));
-// Recupera todas as pessoas cadastradas
-app.get('/pessoa/:nome', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/cadastro', (req, res) => {
+    // recupera os dados recebidos na requisição
+    const { nome, cpf, data_nascimento, telefone, endereco, altura, peso } = req.body;
+    // instancia um novo objeto usando os dados da requisição
+    const novaPessoa = new Pessoa_1.Pessoa(nome, cpf, new Date(data_nascimento), telefone, endereco, altura, peso);
+    try {
+        // Persistindo os dados no banco
+        (0, banco_1.persistirObjetoPessoa)(novaPessoa);
+        // Reposta ao back-end caso a query tenha sido realizada com sucesso
+        res.status(201).json({ mensagem: "Informações cadastradas com sucesso" });
+    }
+    catch (error) {
+        // Em caso de erro, é exibida a mensagem no console do back-end
+        console.error('Erro ao cadastrar informações:', error);
+        // E restransmitida ao cliente
+        res.status(500).json({ erro: 'Erro ao cadastrar informações' });
+    }
+});
+router.get('/pessoa/:nome', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { nome } = req.params;
-    console.log(nome);
     try {
         // Recupera a lista de pessoas do banco de dados e armazena na variável result
         const result = yield (0, banco_1.buscaPessoa)(nome);
-        console.log(result);
         // Retorna o resultado para o cliente
         res.json(result);
     }
@@ -83,12 +70,12 @@ app.get('/pessoa/:nome', (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
     }
 }));
-app.put('/atualizar/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/atualizar/:id', (req, res) => {
     console.log('Alterando os dados no servidor');
     const requisicao = req.body;
+    const id = req.params.id;
     try {
-        // Atualizando os dados no banco
-        yield (0, banco_1.atualizarPessoa)(requisicao.dadosPessoa.id, requisicao.dadosPessoa.nome, requisicao.dadosPessoa.cpf, requisicao.dadosPessoa.data_nascimento, requisicao.dadosPessoa.telefone, requisicao.dadosPessoa.endereco, requisicao.dadosPessoa.altura, requisicao.dadosPessoa.peso);
+        (0, banco_1.atualizarObjetoPessoa)(parseInt(id), new Pessoa_1.Pessoa(requisicao.nome, requisicao.cpf, new Date(requisicao.data_nascimento), requisicao.telefone, requisicao.endereco, requisicao.altura, requisicao.peso));
         // Reposta ao back-end caso a query tenha sido realizada com sucesso
         res.status(201).json({ mensagem: "Informações atualizadas com sucesso" });
     }
@@ -98,13 +85,13 @@ app.put('/atualizar/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         // E restransmitida ao cliente
         res.status(500).json({ erro: 'Erro ao alterar informações' });
     }
-}));
-app.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+});
+router.delete('/deletar/:id', (req, res) => {
     try {
         const id = req.params.id;
         console.log('Realizando a query de delete');
         // Execute a operação de exclusão no banco de dados
-        yield (0, banco_1.apagarPessoa)(parseInt(id));
+        (0, banco_1.apagarPessoa)(parseInt(id));
         // Caso tenha dado certo, é retornado ao cliente
         res.status(204).end();
     }
@@ -112,9 +99,5 @@ app.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
         console.error('Erro ao remover o cadastro:', error);
         res.status(500).json({ erro: 'Erro ao remover o cadastro' });
     }
-}));
-// Executando o servidor
-app.listen(port, () => {
-    console.log(`Servidor Express ouvindo na porta ${port}`);
 });
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=routes.js.map

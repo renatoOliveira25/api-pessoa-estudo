@@ -1,8 +1,7 @@
-import { persistir } from "../controller/bancoDeDados";
-
 export class Pessoa {
 
     // atributos da classe
+    private id: number = 0;
     private nome: string;
     private cpf: string;
     private data_nascimento: Date;
@@ -23,6 +22,15 @@ export class Pessoa {
     }
 
     // métodos GETTERS and SETTERS
+
+    public getId() {
+        return this.id;
+    }
+
+    public setId(_id: number) {
+        this.id = _id;
+    }
+
     /**
      * Retorna o nome da pessoa
      * 
@@ -137,14 +145,5 @@ export class Pessoa {
 
     public comerPrato(prato: string):void {
         console.log(`${this.nome} está comendo ${prato}`);
-    }
-
-    cadastrarPessoa(baninha: Pessoa) {
-        //persistindo os dados
-        try {
-            persistir(baninha);
-        } catch {
-            console.error(`${Error}`);
-        }
     }
 }

@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pessoa = void 0;
-const bancoDeDados_1 = require("../controller/bancoDeDados");
 class Pessoa {
     //método construtor
     constructor(_nome, _cpf, _data_nascimento, _telefone, _endereco, _altura, _peso) {
+        // atributos da classe
+        this.id = 0;
         this.nome = _nome;
         this.cpf = _cpf;
         this.data_nascimento = _data_nascimento;
@@ -14,6 +15,12 @@ class Pessoa {
         this.peso = _peso;
     }
     // métodos GETTERS and SETTERS
+    getId() {
+        return this.id;
+    }
+    setId(_id) {
+        this.id = _id;
+    }
     /**
      * Retorna o nome da pessoa
      *
@@ -108,15 +115,6 @@ class Pessoa {
     }
     comerPrato(prato) {
         console.log(`${this.nome} está comendo ${prato}`);
-    }
-    cadastrarPessoa(baninha) {
-        //persistindo os dados
-        try {
-            (0, bancoDeDados_1.persistir)(baninha);
-        }
-        catch (_a) {
-            console.error(`${Error}`);
-        }
     }
 }
 exports.Pessoa = Pessoa;

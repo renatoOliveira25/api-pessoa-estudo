@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
+    "dev": "npx tsc && node .\\dist\\controller\\server\\server.js",
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
