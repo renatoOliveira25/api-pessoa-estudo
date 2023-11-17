@@ -22,7 +22,7 @@ export class Pessoa {
     }
 
     // métodos GETTERS and SETTERS
-
+    
     public getId() {
         return this.id;
     }

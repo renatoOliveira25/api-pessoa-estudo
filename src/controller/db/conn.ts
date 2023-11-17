@@ -1,4 +1,7 @@
 import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class DatabaseModel{
     private _config : object;
@@ -7,11 +10,11 @@ export class DatabaseModel{
 
     constructor(){
         this._config = {
-            user: "admin",
-            host: "localhost",
-            database: "pessoas",
-            password: "Adm1n@23",
-            port: parseInt(process.env.DB_PORT || '5432'),
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,
+            database: process.env.DB_NAME,
+            password: process.env.DB_PASSWORD,
+            port: process.env.DB_PORT,
             max: 10, // Pool max size
             idleTimeoutMillis: 10000
         };

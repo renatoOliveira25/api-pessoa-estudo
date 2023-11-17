@@ -1,5 +1,5 @@
 import express from "express";
-import { apagarPessoa, atualizarObjetoPessoa, atualizarPessoa, buscaPessoa, listarPessoas, persistirObjetoPessoa } from "../db/banco";
+import { apagarPessoa, atualizarObjetoPessoa, buscaPessoa, listarPessoas, persistirObjetoPessoa } from "../db/banco";
 import { Pessoa } from "../../model/Pessoa";
 
 const router = express.Router();
@@ -25,7 +25,7 @@ router.get('/pessoas', async (req, res) => {
         console.error('Erro na consulta ao banco de dados:', error);
 
         // E retornado ao cliente
-        res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
+        res.status(500).json({ mensagem: 'Erro na consulta ao banco de dados', erro: error });
     }
 })
 
@@ -50,7 +50,7 @@ router.post('/cadastro', (req, res) => {
         console.error('Erro ao cadastrar informações:', error);
 
         // E restransmitida ao cliente
-        res.status(500).json({ erro: 'Erro ao cadastrar informações' });
+        res.status(500).json({ mensagem: 'Erro ao cadastrar informações', erro: error });
 
     }
 });
@@ -71,7 +71,7 @@ router.get('/pessoa/:nome', async (req, res) => {
         console.error('Erro na consulta ao banco de dados:', error);
 
         // E retornado ao cliente
-        res.status(500).json({ error: 'Erro na consulta ao banco de dados' });
+        res.status(500).json({ mensagem: 'Erro na consulta ao banco de dados', erro: error });
     }
 });
 
@@ -100,7 +100,7 @@ router.put('/atualizar/:id', (req, res) => {
         console.error('Erro ao alterar informações:', error);
 
         // E restransmitida ao cliente
-        res.status(500).json({ erro: 'Erro ao alterar informações' });
+        res.status(500).json({ mnsagem: 'Erro ao alterar informações', erro: error });
     }
 });
 
@@ -117,7 +117,7 @@ router.delete('/deletar/:id', (req, res) => {
         res.status(204).end();
     } catch (error) {
         console.error('Erro ao remover o cadastro:', error);
-        res.status(500).json({ erro: 'Erro ao remover o cadastro' });
+        res.status(500).json({ mensagem: 'Erro ao remover o cadastro', erro: error });
     }
 });
 
