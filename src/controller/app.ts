@@ -3,7 +3,7 @@ import { DatabaseModel } from '../controller/db/conn';
 
 // Definindo a porta onde o servidor vai
 // escutar as requisições
-const port: number = 3000;
+const port: number = 3000; 
 
 // Executando o servidor
 // Testa a conexão com o banco de dados
