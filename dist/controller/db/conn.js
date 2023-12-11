@@ -24,7 +24,7 @@ class DatabaseModel {
             database: process.env.DB_NAME,
             password: process.env.DB_PASSWORD,
             port: process.env.DB_PORT,
-            max: 10,
+            max: 10, // Pool max size
             idleTimeoutMillis: 10000
         };
         this._pool = new pg_1.default.Pool(this._config);
