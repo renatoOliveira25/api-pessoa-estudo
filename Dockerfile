@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 # Copie os arquivos necessários para instalar as dependências
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY .env ./
 
 # Instale as dependências, incluindo o TypeScript, localmente
 RUN npm install
